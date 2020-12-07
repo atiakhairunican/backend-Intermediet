@@ -60,7 +60,7 @@ product.update = async (req, res) => {
 
 product.del = async (req, res) => {
     try {
-        const result = await model.delProd(req.params.id)
+        const result = await model.delProd(req.query.id)
         return respon(res, 200, result)
     } catch (error) {
         return respon(res, 404, error)
