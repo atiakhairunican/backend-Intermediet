@@ -21,6 +21,16 @@ product.search = async (req, res) => {
     }
 }
 
+product.orderedAll = async (req, res) => {
+    try {
+        const {name, price, category, orderBy, order} = req.query
+        const result = await model.orderedAllProd(name, price, category, orderBy, order)
+        return respon(res, 200, result)
+    } catch (error) {
+        return respon(res, 400, error)
+    }
+}
+
 product.ordered = async (req, res) => {
     try {
         const result = await model.orderedProd(req.query.orderBy, req.query.order)

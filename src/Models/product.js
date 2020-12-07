@@ -39,7 +39,47 @@ product.searchProd = (name) => {
     })
 }
 
-product.orderedProd = (orderBy = 'name', order = 'ASC') => {
+product.orderedAllProd = (name = '', price = 0, category = '', orderBy = 'name_product', order = 'DESC') => {
+    return new Promise((resolve, reject) => {
+        if (price == 0) {
+            db.query(`SELECT id_product, name_product, price_product, name_category, image_product FROM public.product
+                INNER JOIN public.categories ON (public.product.id_category = public.categories.id)
+                WHERE name_product LIKE '%${name}%' AND price_product > 0 AND name_category LIKE '%${category}%'
+                ORDER BY ${orderBy} ${order}`)
+                .then((res) => {
+                    if (res.rows.length == 0) {
+                        resolve("Data not found")
+                    }
+                    else {
+                        resolve(res.rows)
+                    }
+                }).catch((err) => {
+                    reject(err)
+                });
+        }
+        else if (price != 0) {
+            db.query(`SELECT id_product, name_product, price_product, name_category, image_product FROM public.product
+                INNER JOIN public.categories ON (public.product.id_category = public.categories.id)
+                WHERE name_product LIKE '%${name}%' AND price_product <= ${price} AND name_category LIKE '%${category}%'
+                ORDER BY ${orderBy} ${order}`)
+                .then((res) => {
+                    if (res.rows.length == 0) {
+                        resolve("Data not found")
+                    }
+                    else {
+                        resolve(res.rows)
+                    }
+                }).catch((err) => {
+                    reject(err)
+                });
+        }
+        else {
+            resolve("Check your data input")
+        }
+    })
+}
+
+product.orderedProd = (orderBy = 'name_product', order = 'ASC') => {
     return new Promise((resolve, reject) => {
         db.query(`SELECT id_product, name_product, price_product, name_category, image_product FROM public.product
                 INNER JOIN public.categories ON (public.product.id_category = public.categories.id)

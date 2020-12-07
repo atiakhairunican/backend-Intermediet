@@ -5,6 +5,7 @@ const control = require("../Controllers/product")
 
 router.get("/", control.get)
 router.get("/:name", control.search)
+router.get("/searchs/orderedAll", control.orderedAll)
 router.get("/search/ordered", control.ordered)
 router.post("/", control.add)
 router.put("/", control.update)
