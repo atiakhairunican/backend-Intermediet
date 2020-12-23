@@ -14,7 +14,7 @@ product.get = async (req, res) => {
 
 product.search = async (req, res) => {
     try {
-        const result = await model.searchProd(req.params.name)
+        const result = await model.searchProd(req.body.name)
         return respon(res, 200, result)
     } catch (error) {
         return respon(res, 400, error)
@@ -51,6 +51,8 @@ product.add = async (req, res) => {
 
 product.update = async (req, res) => {
     try {
+        const nameAsId = await model.searchProd(req.body.oldName)
+        req.body.id = nameAsId[0].id_product
         const result = await model.updateProd(req.body)
         return respon(res, 200, result)
     } catch (error) {
@@ -60,7 +62,8 @@ product.update = async (req, res) => {
 
 product.del = async (req, res) => {
     try {
-        const result = await model.delProd(req.query.id)
+        const result = await model.delProd(req.query.name)
+        console.log(req.query.name);
         return respon(res, 200, result)
     } catch (error) {
         return respon(res, 404, error)

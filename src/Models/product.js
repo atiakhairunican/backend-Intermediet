@@ -25,7 +25,7 @@ product.searchProd = (name) => {
     return new Promise((resolve, reject) => {
         db.query(`SELECT id_product, name_product, price_product, name_category, image_product FROM public.product
             INNER JOIN public.categories ON (public.product.id_category = public.categories.id)
-            WHERE name_product LIKE '%${name}%'`)
+            WHERE name_product = '${name}'`)
             .then((res) => {
                 if (res.rows.length == 0) {
                     resolve("Data not found")
@@ -123,8 +123,8 @@ product.addProd = (data) => {
 
 product.updateProd = (data) => {
     return new Promise((resolve, reject) => {
-        if (data.id == undefined) {
-            resolve(`ID must be filled`)
+        if (data.oldName == undefined) {
+            resolve(`Old name must be filled`)
         }
         else {
             db.query(`SELECT id_product, name_product, price_product, name_category, image_product FROM public.product
@@ -155,30 +155,31 @@ product.updateProd = (data) => {
     })
 }
 
-product.delProd = (id) => {
+product.delProd = (name) => {
     return new Promise((resolve, reject) => {
-        if (id != undefined) {
+        if (name != undefined) {
             db.query(`SELECT id_product, name_product, price_product, name_category, image_product FROM public.product
                 INNER JOIN public.categories ON (public.product.id_category = public.categories.id)
-                WHERE id_product = '${id}'`)
+                WHERE name_product = '${name}'`)
                 .then((res) => {
                     if (res.rows.length != 0) {
-                        db.query(`DELETE FROM public.product WHERE id_product = ${id};`)
+                        db.query(`DELETE FROM public.product WHERE name_product = '${name}';`)
                             .then((res) => {
-                                resolve(`Data with ID = ${id} was deleted`)
+                                console.log(name);
+                                resolve(`Data with name = ${name} was deleted`)
                             }).catch((err) => {
                                 reject(err);
                             });
                     }
                     else {
-                        resolve(`Data with ID = ${id} doesn't exist`)
+                        resolve(`Data with name = ${name} doesn't exist`)
                     }
                 }).catch((err) => {
                     reject(err)
                 });
         }
         else {
-            resolve(`ID must be filled`)
+            resolve(`Name must be filled`)
         }
     })
 }

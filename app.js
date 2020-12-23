@@ -8,10 +8,12 @@ const morgan = require("morgan")
 const bodyPars = require("body-parser")
 const db = require("./src/Configs/db")
 const router = require("./src/main")
+const cors = require("cors")
 
 server.use(bodyPars.urlencoded({extended: false}))
 server.use(bodyPars.json())
 server.use(morgan("dev"))
+server.use(cors())
 server.use(router)
 
 db.connect()
